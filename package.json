@@ -32,7 +32,7 @@
         "node": ">=4"
     },
     "files": [
-        "dist/cli.js",
+        "cli.js",
         "CHANGELOG.md",
         "LICENSE.md",
         "README.md",
