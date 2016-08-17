@@ -26,7 +26,7 @@ $ imagemin-power --help
     -p, --plugin         Override the default plugins.
     -o, --out-dir        Output directory.
     -v, --verbose        Report errors only.
-    -a, --parents        Save structure directory.
+    -r, --recursive      Run the command recursively.
     -i, --ignore-errors  Not stop on errors.
 
   Examples

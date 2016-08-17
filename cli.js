@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-'use strict';
+'use strict'; // eslint-disable-line strict
 
 const arrify = require('arrify');
 const fileType = require('file-type');
@@ -27,8 +27,8 @@ const cli = meow(`
         -p, --plugin         Override the default plugins.
         -o, --out-dir        Output directory.
         -v, --verbose        Report errors only.
-        -a, --parents        Save structure directory.
-        -i, --ignore-errors  Not stop on errors.
+        -r, --recursive      Run the command recursively.
+        -i, --ignore-errors  Not stop on errors (it works with only with <path|glob>).
 
     Examples
         $ imagemin images/* --out-dir=build
@@ -38,17 +38,17 @@ const cli = meow(`
 `, {
     alias: {
         /* eslint-disable id-length */
-        a: 'parents',
         c: 'config',
         d: 'cwd',
         i: 'ignore-errors',
         o: 'out-dir',
         p: 'plugin',
+        r: 'recursive',
         v: 'verbose'
         /* eslint-enable id-length */
     },
     boolean: [
-        'parents',
+        'recursive',
         'ignore-errors',
         'verbose'
     ],
@@ -62,26 +62,29 @@ const cli = meow(`
 const handleFile
     = (filepath, opts) => new Promise((resolve, reject) => {
         fs.readFile(filepath, (error, data) => {
+            /* istanbul ignore if */
             if (error) {
-                return reject(new Error(error));
+                return reject(error);
             }
 
             return resolve(data);
         });
     })
     .then(
-        (data) => imagemin.buffer(data, opts)
+        (data) => imagemin.buffer(data, {
+            plugins: opts.plugin
+        })
             .then((buffer) => {
                 let parentDirectory = '';
 
-                if (opts.parents) {
+                if (opts.recursive) {
                     parentDirectory = path.relative(opts.cwd, path.dirname(filepath));
                 }
 
                 const dest = path.resolve(
                     opts.outDir
                         ? path.join(opts.outDir, parentDirectory, path.basename(filepath))
-                        : null
+                        : filepath
                 );
 
                 const ret = {
@@ -91,15 +94,16 @@ const handleFile
                     path: fileType(buffer) && fileType(buffer).ext === 'webp' ? replaceExt(dest, '.webp') : dest
                 };
 
-                return new Promise((resolve, reject) => {
-                    fs.outputFile(ret.path, ret.data, (error) => {
+                return new Promise(
+                    (resolve, reject) => fs.outputFile(ret.path, ret.data, (error) => {
+                        /* istanbul ignore if */
                         if (error) {
-                            return reject(new Error(error));
+                            return reject(error);
                         }
 
                         return resolve(ret);
-                    });
-                });
+                    })
+                );
             })
     );
 
@@ -131,12 +135,12 @@ const run = (input, options) => {
     const opts = Object.assign({
         config: null,
         cwd: process.cwd(),
-        parents: false,
         // Info support multiple plugins
-        plugin: DEFAULT_PLUGINS
+        plugin: DEFAULT_PLUGINS,
+        recursive: false
     }, options);
 
-    const dataSource = options.config || path.resolve('./.imagemin.js');
+    const dataSource = opts.config || path.resolve('./.imagemin.js');
 
     if (opts.config) {
         let config = null;
@@ -153,12 +157,6 @@ const run = (input, options) => {
         opts.plugin = requirePlugins(arrify(opts.plugin));
     }
 
-    let spinner = ora();
-
-    if (options.verbose) {
-        spinner = ora('Starting minifying images...');
-    }
-
     if (Buffer.isBuffer(input)) {
         return imagemin
             .buffer(input, {
@@ -167,10 +165,16 @@ const run = (input, options) => {
             .then((buf) => process.stdout.write(buf));
     }
 
-    if (opts.outDir && options.verbose) {
+    let spinner = null;
+
+    if (opts.verbose) {
+        spinner = ora(
+            'Starting minifying images...'
+        );
         spinner.start();
     }
 
+    /* istanbul ignore if */
     if (!Array.isArray(input)) {
         return Promise.reject(new TypeError('Expected an array'));
     }
@@ -184,72 +188,67 @@ const run = (input, options) => {
         cwd: opts.cwd,
         nodir: true
     })
-        .then((paths) => Promise.all(paths.map((filepath) => {
-            const realFilepath = path.resolve(path.join(opts.cwd, filepath));
-            const total = paths.length;
+        .then((paths) => {
+            // Maybe throw error if not found images
 
-            return handleFile(realFilepath, opts)
-                .then(
-                    (result) => {
-                        successCounter++;
-
-                        if (options.verbose) {
-                            const originalSize = result.originalSize;
-                            const optimizedSize = result.optimizedSize;
-                            const saved = originalSize - optimizedSize;
-                            const percent = originalSize > 0 ? (saved / originalSize) * 100 : 0;
-                            const savedMsg = `saved ${prettyBytes(saved)} - ${percent.toFixed(1).replace(/\.0$/, '')}%`;
-
-                            totalBytes += originalSize;
-                            totalSavedBytes += saved;
-
-                            spinner.text = `Minifying image "${filepath}" `
-                                + `(${successCounter + failCounter} of ${total})`
-                                + `${saved > 0 ? ` - ${savedMsg}` : ' - already optimized'}...`;
-                            spinner.succeed();
-                            spinner.text = 'Minifying images...';
-                            spinner.start();
-                        }
-
-                        return filepath;
-                    },
-                    (error) => {
-                        if (opts.ignoreErrors) {
-                            if (opts.verbose) {
-                                failCounter++;
-
-                                spinner.text = `Minifying image "${filepath}" `
-                                    + `(${successCounter + failCounter} of ${total})...\nError: ${error.stack}...`;
-                                spinner.fail();
-                                spinner.text = 'Minifying images...';
-                                spinner.start();
-                            }
-
-                            return Promise.resolve();
-                        }
-
-                        return Promise.reject(new Error(error));
-                    }
-                );
-        })))
-        .then((files) => {
-            if (!opts.outDir && files.length === 0) {
-                return Promise.resolve(files);
-            }
-
-            if (!opts.outDir && files.length > 1) {
+            if (!opts.outDir && paths.length > 1) {
                 // eslint-disable-next-line no-console
                 console.error('Cannot write multiple files to stdout, specify a `--out-dir`');
                 process.exit(1); // eslint-disable-line no-process-exit
             }
 
-            if (!opts.outDir) {
-                process.stdout.write(files[0].data);
+            return Promise.all(paths.map((filepath) => {
+                const realFilepath = path.resolve(path.join(opts.cwd, filepath));
+                const total = paths.length;
 
-                return Promise.resolve(files);
-            }
+                return handleFile(realFilepath, opts)
+                    .then(
+                        (result) => {
+                            if (opts.verbose) {
+                                successCounter++;
 
-            if (options.verbose) {
+                                const originalSize = result.originalSize;
+                                const optimizedSize = result.optimizedSize;
+                                const saved = originalSize - optimizedSize;
+                                const percent = originalSize > 0 ? (saved / originalSize) * 100 : 0;
+                                const savedMsg = `saved ${prettyBytes(saved)} `
+                                    + `- ${percent.toFixed(1).replace(/\.0$/, '')}%`;
+
+                                totalBytes += originalSize;
+                                totalSavedBytes += saved;
+
+                                spinner.text = `Minifying image "${filepath}" `
+                                    + `(${successCounter + failCounter} of ${total})`
+                                    + `${saved > 0 ? ` - ${savedMsg}` : ' - already optimized'}...`;
+                                spinner.succeed();
+                                spinner.text = 'Minifying images...';
+                                spinner.start();
+                            }
+
+                            return filepath;
+                        },
+                        (error) => {
+                            if (opts.ignoreErrors) {
+                                if (opts.verbose) {
+                                    failCounter++;
+
+                                    spinner.text = `Minifying image "${filepath}" `
+                                        + `(${successCounter + failCounter} of ${total})...\nError: ${error.stack}...`;
+                                    spinner.fail();
+                                    spinner.text = 'Minifying images...';
+                                    spinner.start();
+                                }
+
+                                return Promise.resolve();
+                            }
+
+                            return Promise.reject(error);
+                        }
+                    );
+            }));
+        })
+        .then((files) => {
+            if (opts.verbose) {
                 const percent = totalBytes > 0 ? (totalSavedBytes / totalBytes) * 100 : 0;
 
                 spinner.text = `Successfully compressed images: ${successCounter}. `
@@ -271,6 +270,7 @@ const run = (input, options) => {
         });
 };
 
+/* istanbul ignore if */
 if (!cli.input.length && process.stdin.isTTY) {
     console.error('Specify at least one filename'); // eslint-disable-line no-console
     process.exit(1); // eslint-disable-line no-process-exit

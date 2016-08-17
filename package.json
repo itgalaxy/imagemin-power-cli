@@ -1,6 +1,6 @@
 {
     "name": "imagemin-power-cli",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "Minify images.",
     "keywords": [
         "cli",
@@ -9,11 +9,13 @@
         "imagemin",
         "gif",
         "image",
+        "images",
         "jpeg",
         "jpg",
         "minify",
         "png",
-        "svg"
+        "svg",
+        "webp"
     ],
     "author": "Itgalaxy",
     "license": "MIT",
@@ -79,9 +81,8 @@
     "scripts": {
         "coveralls": "nyc report --reporter=text-lcov | coveralls",
 
-        "manual:lint:eslint": "eslint . --ignore-path .gitignore  --color",
-        "todo": "test md inside directory",
-        "lint:remark": "remark '{**/,*}.md' -r ./node_modules/remark-lint-config-itgalaxy/index.js -i .gitignore -f -q",
+        "lint:eslint": "eslint . --ignore-pattern '**/__tests__/**' --ignore-path .gitignore  --color",
+        "lint:remark": "remark '{**/*,*}.md' -r ./node_modules/remark-lint-config-itgalaxy/index.js -i .gitignore -f -q",
         "lint": "npm-run-all -l -p lint:**",
 
         "ava": "nyc ava --verbose '**/__tests__/*.js'",
