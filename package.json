@@ -40,16 +40,16 @@
     ],
     "dependencies": {
         "arrify": "^1.0.1",
+        "file-type": "^3.8.0",
+        "fs-extra": "^0.30.0",
         "get-stdin": "^5.0.1",
+        "globby": "^6.0.0",
         "imagemin": "^5.0.0",
         "meow": "^3.6.0",
         "ora": "^0.3.0",
         "plur": "^2.1.2",
-        "strip-indent": "^2.0.0",
-        "fs-extra": "^0.30.0",
         "pretty-bytes": "^3.0.0",
-        "file-type": "^3.8.0",
-        "globby": "^6.0.0"
+        "strip-indent": "^2.0.0"
     },
     "devDependencies": {
         "ava": "^0.16.0",
@@ -60,17 +60,17 @@
         "babel-register": "^6.9.0",
         "eslint": "^3.1.0",
         "eslint-ava-rule-tester": "^2.0.0",
+        "execa": "^0.4.0",
+        "imagemin-pngquant": "^5.0.0",
         "npmpub": "^3.1.0",
-        "npm-run-all": "^2.3.0",
+        "npm-run-all": "^3.0.0",
         "nyc": "^8.1.0",
+        "pify": "^2.3.0",
         "remark-cli": "^1.0.0",
         "remark-lint": "^4.0.0",
         "remark-lint-config-itgalaxy": "^1.0.0",
-        "rimraf": "^2.5.2",
-        "execa": "^0.4.0",
-        "pify": "^2.3.0",
         "replace-ext": "^1.0.0",
-        "imagemin-pngquant": "^5.0.0"
+        "rimraf": "^2.5.2"
     },
     "optionalDependencies": {
         "imagemin-gifsicle": "^5.0.0",
