@@ -18,42 +18,47 @@ test('show version', async (t) => {
 
 test('optimize a GIF', async (t) => {
     const buf = await fsP.readFile('fixtures/test.gif');
-
-    t.true((await execa.stdout('../cli.js', {
+    const stdout = await execa.stdout('../cli.js', {
         input: buf
-    })).length < buf.length);
+    });
+
+    t.true(stdout.length < buf.length);
 });
 
 test('optimize a jpg', async (t) => {
     const buf = await fsP.readFile('fixtures/test.jpg');
-
-    t.true((await execa.stdout('../cli.js', {
+    const stdout = await execa.stdout('../cli.js', {
         input: buf
-    })).length < buf.length);
+    });
+
+    t.true(stdout.length < buf.length);
 });
 
 test('optimize a png', async (t) => {
     const buf = await fsP.readFile('fixtures/test.png');
-
-    t.true((await execa.stdout('../cli.js', {
+    const stdout = await execa.stdout('../cli.js', {
         input: buf
-    })).length < buf.length);
+    });
+
+    t.true(stdout.length < buf.length);
 });
 
 test('optimize a svg', async (t) => {
     const buf = await fsP.readFile('fixtures/test.svg');
-
-    t.true((await execa.stdout('../cli.js', {
+    const stdout = await execa.stdout('../cli.js', {
         input: buf
-    })).length < buf.length);
+    });
+
+    t.true(stdout.length < buf.length);
 });
 
 test('optimize a WebP', async (t) => {
     const buf = await fsP.readFile('fixtures/test.webp');
-
-    t.true((await execa.stdout('../cli.js', {
+    const stdout = await execa.stdout('../cli.js', {
         input: buf
-    })).length < buf.length);
+    });
+
+    t.true(stdout.length < buf.length);
 });
 
 test('optimize with config', async (t) => {

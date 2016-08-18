@@ -17,11 +17,19 @@ const stripIndent = require('strip-indent');
 
 const cli = meow(`
     Usage
-        $ imagemin <path|glob> ... --out-dir=build [--plugin=<name> ...]
-        $ imagemin <file> > <output>
-        $ cat <file> | imagemin > <output>
+        $ imagemin-power [input] [options]
+        $ imagemin-power <file> > <output>
+        $ cat <file> | imagemin-power > <output>
+        
+    Input: Files(s), glob(s), or nothing to use stdin.
+      
+        If an input argument is wrapped in quotation marks, it will be passed to
+        node-glob for cross-platform glob support. node_modules and
+        bower_components are always ignored. You can also pass no input and use
+        stdin, instead.
 
-    Options
+    Options:
+
         -c, --config         Configuration for plugins, need export \`plugins\`.
         -d, --cwd            Current working directory.
         -p, --plugin         Override the default plugins.
@@ -31,10 +39,10 @@ const cli = meow(`
         -i, --ignore-errors  Not stop on errors (it works with only with <path|glob>).
 
     Examples
-        $ imagemin images/* --out-dir=build
-        $ imagemin foo.png > foo-optimized.png
-        $ cat foo.png | imagemin > foo-optimized.png
-        $ imagemin --plugins=pngquant foo.png > foo-optimized.png
+        $ imagemin-power images/* --out-dir=build
+        $ imagemin-power foo.png > foo-optimized.png
+        $ cat foo.png | imagemin-power > foo-optimized.png
+        $ imagemin-power --plugins=pngquant foo.png > foo-optimized.png
 `, {
     alias: {
         /* eslint-disable id-length */
@@ -59,6 +67,11 @@ const cli = meow(`
     ]
 });
 
+/* istanbul ignore if */
+if (!cli.input.length && process.stdin.isTTY) {
+    cli.showHelp();
+}
+
 const handleFile
     = (filepath, opts) => new Promise((resolve, reject) => {
         fs.readFile(filepath, (error, data) => {
@@ -81,11 +94,7 @@ const handleFile
                     parentDirectory = path.relative(opts.cwd, path.dirname(filepath));
                 }
 
-                const dest = path.resolve(
-                    opts.outDir
-                        ? path.join(opts.outDir, parentDirectory, path.basename(filepath))
-                        : filepath
-                );
+                const dest = path.resolve(path.join(opts.outDir, parentDirectory, path.basename(filepath)));
 
                 const ret = {
                     data: buffer,
@@ -270,10 +279,34 @@ const run = (input, options) => {
         });
 };
 
-/* istanbul ignore if */
-if (!cli.input.length && process.stdin.isTTY) {
-    console.error('Specify at least one filename'); // eslint-disable-line no-console
-    process.exit(1); // eslint-disable-line no-process-exit
+const optionsBase = {};
+
+if (cli.flags.config) {
+    optionsBase.config = cli.flags.config;
+}
+
+if (cli.flags.cwd) {
+    optionsBase.cwd = cli.flags.cwd;
+}
+
+if (cli.flags.plugin) {
+    optionsBase.plugin = cli.flags.plugin;
+}
+
+if (cli.flags.outDir) {
+    optionsBase.outDir = cli.flags.outDir;
+}
+
+if (cli.flags.verbose) {
+    optionsBase.verbose = cli.flags.verbose;
+}
+
+if (cli.flags.recursive) {
+    optionsBase.recursive = cli.flags.recursive;
+}
+
+if (cli.flags.ignoreErrors) {
+    optionsBase.ignoreErrors = cli.flags.ignoreErrors;
 }
 
 if (cli.input.length) {
