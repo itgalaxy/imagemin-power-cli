@@ -1,4 +1,4 @@
-# Head
+# 0.2.0
 
 - Added: protected options from extra properties.
 - Changed: output `help` information if `input` is empty.
