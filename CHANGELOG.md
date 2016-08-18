@@ -1,6 +1,7 @@
 # Head
 
 - Chore(package): remove extra `files` from `package.json`.
+- Chore: rename `LICENSE.md` to `LICENSE`.
 
 # 0.2.0
 
