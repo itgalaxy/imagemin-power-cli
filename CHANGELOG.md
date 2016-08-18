@@ -1,3 +1,7 @@
+# Head
+
+- Chore(package): remove extra `files` from `package.json`.
+
 # 0.2.0
 
 - Added: protected options from extra properties.

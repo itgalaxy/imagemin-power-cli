@@ -32,11 +32,7 @@
         "node": ">=4"
     },
     "files": [
-        "cli.js",
-        "CHANGELOG.md",
-        "LICENSE.md",
-        "README.md",
-        "!**/__tests__"
+        "cli.js"
     ],
     "dependencies": {
         "arrify": "^1.0.1",
