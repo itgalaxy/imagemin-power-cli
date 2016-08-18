@@ -10,3 +10,4 @@ cache:
 before_install:
     - npm prune
     - npm update
+after_success: npm run coveralls
