@@ -34,9 +34,10 @@ const cli = meow(`
         -d, --cwd            Current working directory.
         -p, --plugin         Override the default plugins.
         -o, --out-dir        Output directory.
-        -v, --verbose        Report errors only.
         -r, --recursive      Run the command recursively.
         -i, --ignore-errors  Not stop on errors (it works with only with <path|glob>).
+        -s  --silent         Reported only errors.
+        -v, --verbose        Reported everything.
 
     Examples
         $ imagemin-power images/* --out-dir=build
@@ -52,6 +53,7 @@ const cli = meow(`
         o: 'out-dir',
         p: 'plugin',
         r: 'recursive',
+        s: 'silent',
         v: 'verbose'
         /* eslint-enable id-length */
     },
@@ -146,7 +148,9 @@ const run = (input, options) => {
         cwd: process.cwd(),
         // Info support multiple plugins
         plugin: DEFAULT_PLUGINS,
-        recursive: false
+        recursive: false,
+        silent: false,
+        verbose: false
     }, options);
 
     const dataSource = opts.config || path.resolve('./.imagemin.js');
@@ -176,11 +180,13 @@ const run = (input, options) => {
 
     let spinner = null;
 
-    if (opts.verbose) {
-        spinner = ora(
-            'Starting minifying images...'
-        );
-        spinner.start();
+    if (opts.verbose || opts.silent) {
+        spinner = ora();
+
+        if (opts.verbose) {
+            spinner.text = 'Starting minifying images...';
+            spinner.start();
+        }
     }
 
     /* istanbul ignore if */
@@ -238,12 +244,14 @@ const run = (input, options) => {
                         },
                         (error) => {
                             if (opts.ignoreErrors) {
-                                if (opts.verbose) {
+                                if (opts.verbose || opts.silent) {
                                     failCounter++;
 
                                     spinner.text = `Minifying image "${filepath}" `
-                                        + `(${successCounter + failCounter} of ${total})...\nError: ${error.stack}...`;
+                                        + `(${successCounter
+                                        + failCounter} of ${total})...\nError: ${error.stack}...`;
                                     spinner.fail();
+
                                     spinner.text = 'Minifying images...';
                                     spinner.start();
                                 }
@@ -271,7 +279,7 @@ const run = (input, options) => {
             return Promise.resolve(files);
         })
         .catch((error) => {
-            if (opts.verbose) {
+            if (opts.verbose || opts.silent) {
                 spinner.fail();
             }
 

@@ -140,6 +140,7 @@ test('optimize a PNG use glob pattern and with verbose', async (t) => {
     const afterOptimizeData = await fsP.readFile('fixtures/tmp/test.png');
 
     t.regex(output.stderr, /Minifying image "fixtures\/test.png"/);
+    t.regex(output.stderr, /Successfully compressed images: 1. Unsuccessfully compressed images: 0. Total images: 1./);
     t.true(afterOptimizeData.length < beforeOptimizeData.length);
 });
 
@@ -162,6 +163,10 @@ test('output error on corrupt images use glob pattern and verbose', async (t) =>
 
     t.true(output.code === 1);
     t.regex(output.stderr, /Error: Corrupt JPEG data/);
+    t.notRegex(
+        output.stderr,
+        /Successfully compressed images: 0. Unsuccessfully compressed images: 1. Total images: 1./
+    );
 });
 
 test('optimize a corrupt image use verbose and ignore-errors', async (t) => {
@@ -174,6 +179,46 @@ test('optimize a corrupt image use verbose and ignore-errors', async (t) => {
     t.regex(output.stderr, /Minifying image "fixtures\/test-corrupt.jpg"/);
     t.regex(output.stderr, /Error: Corrupt JPEG data/);
     t.regex(output.stderr, /Unsuccessfully compressed images: 1/);
+});
+
+test('optimize a corrupt image and a normal image use verbose and ignore-errors', async (t) => {
+    const output = await execa('../cli.js', [
+        'fixtures/test-corrupt.jpg',
+        'fixtures/test.jpg',
+        '--out-dir=fixtures/tmp',
+        '--verbose',
+        '--ignore-errors'
+    ]);
+
+    t.regex(output.stderr, /Minifying image "fixtures\/test-corrupt.jpg"/);
+    t.regex(output.stderr, /Error: Corrupt JPEG data/);
+    t.regex(output.stderr, /Minifying image "fixtures\/test.jpg"/);
+    t.regex(output.stderr, /Successfully compressed images: 1. Unsuccessfully compressed images: 1. Total images: 2./);
+});
+
+test('optimize a corrupt image use silent and ignore-errors', async (t) => {
+    const output = await execa('../cli.js', [
+        'fixtures/test-corrupt.jpg',
+        '--silent',
+        '--ignore-errors'
+    ]);
+
+    t.regex(output.stderr, /Minifying image "fixtures\/test-corrupt.jpg"/);
+    t.regex(output.stderr, /Error: Corrupt JPEG data/);
+});
+
+test('optimize a corrupt image and a normal image use silent and ignore-errors', async (t) => {
+    const output = await execa('../cli.js', [
+        'fixtures/test-corrupt.jpg',
+        'fixtures/test.jpg',
+        '--out-dir=fixtures/tmp',
+        '--silent',
+        '--ignore-errors'
+    ]);
+
+    t.regex(output.stderr, /Minifying image "fixtures\/test-corrupt.jpg"/);
+    t.regex(output.stderr, /Error: Corrupt JPEG data/);
+    t.notRegex(output.stderr, /Successfully compressed images: 1. Unsuccessfully compressed images: 1. Total images: 2./);
 });
 
 test('optimize images use verbose and ignore-errors', async (t) => {
@@ -189,7 +234,7 @@ test('optimize images use verbose and ignore-errors', async (t) => {
     t.regex(output.stderr, /Minifying image "fixtures\/test.webp"/);
     t.regex(output.stderr, /Minifying image "fixtures\/test.gif"/);
     t.regex(output.stderr, /Minifying image "fixtures\/test.svg"/);
-    t.regex(output.stderr, /Successfully compressed images: 5/);
+    t.regex(output.stderr, /Successfully compressed images: 5. Unsuccessfully compressed images: 0. Total images: 5./);
 });
 
 test('support plugins', async (t) => {

@@ -1,6 +1,13 @@
-# Head
+# 0.3.0
 
+- Added: `silent` argument reported only errors.
+- Changed: `verbose` argument reported anything.
+- Chore(package): use `^` instead `~` for `babel-preset-es2015` package.
+- Chore(package): use `^` instead `~` for `babel-preset-stage-0"` package.
 - Chore(package): remove extra `files` from `package.json`.
+- Chore(package): update a minimal version of `remark-cli` from `1.0.0` to `2.0.0`.
+- Chore(package): update a minimal version of `remark-lint` from `4.0.0` to `5.0.0`.
+- Chore(package): use `remark-preset-lint-itgalaxy` instead `remark-lint-config-itgalaxy`.
 - Chore: rename `LICENSE.md` to `LICENSE`.
 
 # 0.2.0

@@ -13,7 +13,7 @@ $ npm install --global imagemin-power-cli
 ## Usage
 
 ```shell
-Usage
+    Usage
         $ imagemin-power [input] [options]
         $ imagemin-power <file> > <output>
         $ cat <file> | imagemin-power > <output>
@@ -31,11 +31,13 @@ Usage
         -d, --cwd            Current working directory.
         -p, --plugin         Override the default plugins.
         -o, --out-dir        Output directory.
-        -v, --verbose        Report errors only.
         -r, --recursive      Run the command recursively.
         -i, --ignore-errors  Not stop on errors (it works with only with <path|glob>).
+        -s  --silent         Reported only errors.
+        -v, --verbose        Reported everything.
 
-    Examples
+    Examples:
+
         $ imagemin-power images/* --out-dir=build
         $ imagemin-power foo.png > foo-optimized.png
         $ cat foo.png | imagemin-power > foo-optimized.png
