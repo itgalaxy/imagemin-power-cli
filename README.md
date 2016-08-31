@@ -48,4 +48,6 @@ $ npm install --global imagemin-power-cli
 
 - [imagemin](https://github.com/imagemin/imagemin) - API for this module
 
+## [Changelog](CHANGELOG.md)
+
 ## [License](LICENSE.md)
