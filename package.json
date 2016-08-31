@@ -1,7 +1,7 @@
 {
     "name": "imagemin-power-cli",
     "version": "0.3.0",
-    "description": "Minify images.",
+    "description": "Minify images with imagemin use CLI",
     "keywords": [
         "cli",
         "cli-app",

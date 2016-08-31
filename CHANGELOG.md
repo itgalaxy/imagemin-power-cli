@@ -2,6 +2,8 @@
 
 - Chore(package): use right semver for `eslint-*`.
 - Chore(package): update a minimal version of `pretty-bytes` from `3.0.0` to `4.0.0`.
+- Chore: more full `description`.
+- Chore: fix link `dependencies` and `devDependencies`.
 
 # 0.3.0
 
