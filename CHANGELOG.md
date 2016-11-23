@@ -1,7 +1,13 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+
+This project adheres to [Semantic Versioning](http://semver.org/).
+
 # Head
 
-- Chore(package): use right semver for `eslint-*`.
-- Chore(package): update a minimal version of `pretty-bytes` from `3.0.0` to `4.0.0`.
+- Chore: use right semver for `eslint-*`.
+- Chore: update a minimal version of `pretty-bytes` from `3.0.0` to `4.0.0`.
 - Chore: more full `description`.
 - Chore: fix link `dependencies` and `devDependencies`.
 
@@ -9,27 +15,25 @@
 
 - Added: `silent` argument reported only errors.
 - Changed: `verbose` argument reported anything.
-- Chore(package): use `^` instead `~` for `babel-preset-es2015` package.
-- Chore(package): use `^` instead `~` for `babel-preset-stage-0"` package.
-- Chore(package): remove extra `files` from `package.json`.
-- Chore(package): update a minimal version of `remark-cli` from `1.0.0` to `2.0.0`.
-- Chore(package): update a minimal version of `remark-lint` from `4.0.0` to `5.0.0`.
-- Chore(package): use `remark-preset-lint-itgalaxy` instead `remark-lint-config-itgalaxy`.
-- Chore: rename `LICENSE.md` to `LICENSE`.
+- Chore: remove extra `files` from `package.json`.
+- Chore: minimum required `remark-cli` version is now `^2.0.0`.
+- Chore: minimum required `remark-lint` version is now `^5.0.0`.
+- Chore: use `remark-preset-lint-itgalaxy` instead `remark-lint-config-itgalaxy`.
+- Chore: renamed `LICENSE.md` to `LICENSE`.
 
 # 0.2.0
 
 - Added: protected options from extra properties.
-- Changed: output `help` information if `input` is empty.
+- Changed: outputed `help` information if `input` is empty.
 - Chore: show more information on `help` argument.
-- Chore: replace `imagemin` to `imagemin-power` in `help` command.
-- Chore: improve code coverage.
-- Docs: update `usage` section.
-- Tests: improve tests.
+- Chore: replaced `imagemin` to `imagemin-power` in `help` command.
+- Chore: improved code coverage.
+- Documentation: updated `usage` section.
+- Tests: improved tests.
 
 # 0.1.1
 
-- Fixed: right way to `cli.js` in `package.json`.
+- Fixed: right path to `cli.js` in `package.json`.
 
 # 0.1.0
 
