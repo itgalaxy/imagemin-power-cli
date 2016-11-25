@@ -70,7 +70,7 @@ const cli = meow(`
 });
 
 /* istanbul ignore if */
-if (cli.input.length !== 0 && process.stdin.isTTY) {
+if (cli.input.length === 0 && process.stdin.isTTY) {
     cli.showHelp();
 }
 

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# Head
+
+- Fixed: regression error when input not empty.
+
 # 0.3.1
 
 - Chore: use right semver for `eslint-*`.
