@@ -4,12 +4,30 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# Head
+# 0.3.1
 
 - Chore: use right semver for `eslint-*`.
 - Chore: update a minimal version of `pretty-bytes` from `3.0.0` to `4.0.0`.
 - Chore: more full `description`.
 - Chore: fix link `dependencies` and `devDependencies`.
+- Chore: minimum required `fs-extra` version is now `^1.0.0`.
+- Chore: minimum required `ava` version is now `^0.17.0`.
+- Chore: minimum required `nyc` version is now `^10.0.0`.
+- Chore: minimum required `execa` version is now `^0.5.0`.
+- Chore: minimum required `remark-preset-lint-itgalaxy` version is now `^3.0.0`.
+- Chore: minimum required `eslint` version is now `^3.10.0`.
+- Chore: minimum required `eslint-plugin-ava` version is now `^4.0.0`.
+- Chore: minimum required `eslint-plugin-import` version is now `^2.2.0`.
+- Chore: minimum required `eslint-plugin-itgalaxy` version is now `^30.0.0`.
+- Chore: minimum required `eslint-plugin-jsx-a11y` version is now `^3.0.0`.
+- Chore: minimum required `eslint-plugin-lodash` version is now `^2.2.0`.
+- Chore: minimum required `eslint-plugin-node` version is now `^3.0.0`.
+- Chore: minimum required `eslint-plugin-promise` version is now `^3.4.0`.
+- Chore: minimum required `eslint-plugin-react` version is now `^6.7.0`.
+- Chore: minimum required `eslint-plugin-xo` version is now `^1.0.0`.
+- Chore: rename `eslint-plugin-xo` to `eslint-plugin-unicorn`.
+- Chore: add `node.js` vesion `7` to travis CI.
+- Fixed: move `replace-ext` from `devDependencies` to `dependencies`.
 
 # 0.3.0
 

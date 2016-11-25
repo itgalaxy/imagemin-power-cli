@@ -12,7 +12,7 @@ test('show help screen', async (t) => {
 });
 
 test('show version', async (t) => {
-    // eslint-disable-line no-global-require
+    // eslint-disable-next-line global-require
     t.is(await execa.stdout('../cli.js', ['--version']), require('../package.json').version);
 });
 
@@ -218,7 +218,10 @@ test('optimize a corrupt image and a normal image use silent and ignore-errors',
 
     t.regex(output.stderr, /Minifying image "fixtures\/test-corrupt.jpg"/);
     t.regex(output.stderr, /Error: Corrupt JPEG data/);
-    t.notRegex(output.stderr, /Successfully compressed images: 1. Unsuccessfully compressed images: 1. Total images: 2./);
+    t.notRegex(
+        output.stderr,
+        /Successfully compressed images: 1. Unsuccessfully compressed images: 1. Total images: 2./
+    );
 });
 
 test('optimize images use verbose and ignore-errors', async (t) => {

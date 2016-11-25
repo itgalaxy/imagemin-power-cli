@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-'use strict'; // eslint-disable-line strict
+'use strict'; // eslint-disable-line strict, lines-around-directive
 
 const arrify = require('arrify');
 const fileType = require('file-type');
@@ -70,7 +70,7 @@ const cli = meow(`
 });
 
 /* istanbul ignore if */
-if (!cli.input.length && process.stdin.isTTY) {
+if (cli.input.length !== 0 && process.stdin.isTTY) {
     cli.showHelp();
 }
 
@@ -85,38 +85,38 @@ const handleFile
             return resolve(data);
         });
     })
-    .then(
-        (data) => imagemin.buffer(data, {
-            plugins: opts.plugin
-        })
-            .then((buffer) => {
-                let parentDirectory = '';
-
-                if (opts.recursive) {
-                    parentDirectory = path.relative(opts.cwd, path.dirname(filepath));
-                }
-
-                const dest = path.resolve(path.join(opts.outDir, parentDirectory, path.basename(filepath)));
-
-                const ret = {
-                    data: buffer,
-                    optimizedSize: buffer.length,
-                    originalSize: data.length,
-                    path: fileType(buffer) && fileType(buffer).ext === 'webp' ? replaceExt(dest, '.webp') : dest
-                };
-
-                return new Promise(
-                    (resolve, reject) => fs.outputFile(ret.path, ret.data, (error) => {
-                        /* istanbul ignore if */
-                        if (error) {
-                            return reject(error);
-                        }
-
-                        return resolve(ret);
-                    })
-                );
+        .then(
+            (data) => imagemin.buffer(data, {
+                plugins: opts.plugin
             })
-    );
+                .then((buffer) => {
+                    let parentDirectory = '';
+
+                    if (opts.recursive) {
+                        parentDirectory = path.relative(opts.cwd, path.dirname(filepath));
+                    }
+
+                    const dest = path.resolve(path.join(opts.outDir, parentDirectory, path.basename(filepath)));
+
+                    const ret = {
+                        data: buffer,
+                        optimizedSize: buffer.length,
+                        originalSize: data.length,
+                        path: fileType(buffer) && fileType(buffer).ext === 'webp' ? replaceExt(dest, '.webp') : dest
+                    };
+
+                    return new Promise(
+                        (resolve, reject) => fs.outputFile(ret.path, ret.data, (error) => {
+                            /* istanbul ignore if */
+                            if (error) {
+                                return reject(error);
+                            }
+
+                            return resolve(ret);
+                        })
+                    );
+                })
+        );
 
 const DEFAULT_PLUGINS = [
     'gifsicle',
@@ -128,7 +128,8 @@ const DEFAULT_PLUGINS = [
 // eslint-disable-next-line consistent-return, array-callback-return
 const requirePlugins = (plugins) => plugins.map((plugin) => {
     try {
-        return require(`imagemin-${plugin}`)(); // eslint-disable-line global-require
+        // eslint-disable-next-line global-require, import/no-dynamic-require
+        return require(`imagemin-${plugin}`)();
     } catch (error) {
         // eslint-disable-next-line no-console
         console.error(stripIndent(`
@@ -159,7 +160,8 @@ const run = (input, options) => {
         let config = null;
 
         try {
-            config = require(path.resolve(dataSource)); // eslint-disable-line global-require
+            // eslint-disable-next-line global-require, import/no-dynamic-require
+            config = require(path.resolve(dataSource));
         } catch (error) {
             console.error(`Cannot require "config"\n${error}`); // eslint-disable-line no-console
             process.exit(1); // eslint-disable-line no-process-exit
@@ -206,6 +208,7 @@ const run = (input, options) => {
         .then((paths) => {
             // Maybe throw error if not found images
 
+            // eslint-disable-next-line promise/always-return
             if (!opts.outDir && paths.length > 1) {
                 // eslint-disable-next-line no-console
                 console.error('Cannot write multiple files to stdout, specify a `--out-dir`');
@@ -317,7 +320,7 @@ if (cli.flags.ignoreErrors) {
     optionsBase.ignoreErrors = cli.flags.ignoreErrors;
 }
 
-if (cli.input.length) {
+if (cli.input.length > 0) {
     run(cli.input, cli.flags)
         .catch((error) => {
             console.error(error.stack); // eslint-disable-line no-console
