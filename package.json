@@ -36,7 +36,7 @@
     ],
     "dependencies": {
         "arrify": "^1.0.1",
-        "file-type": "^3.8.0",
+        "file-type": "^4.0.0",
         "fs-extra": "^1.0.0",
         "get-stdin": "^5.0.1",
         "globby": "^6.0.0",
@@ -59,7 +59,7 @@
         "eslint": "^3.10.0",
         "eslint-plugin-ava": "^4.0.0",
         "eslint-plugin-import": "^2.2.0",
-        "eslint-plugin-itgalaxy": "^30.0.0",
+        "eslint-plugin-itgalaxy": "^33.0.0",
         "eslint-plugin-jsx-a11y": "^3.0.0",
         "eslint-plugin-lodash": "^2.2.0",
         "eslint-plugin-node": "^3.0.0",
