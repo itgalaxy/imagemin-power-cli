@@ -1,6 +1,6 @@
 {
     "name": "imagemin-power-cli",
-    "version": "0.3.2",
+    "version": "0.4.0-alpha.1",
     "description": "Minify images with imagemin use CLI",
     "keywords": [
         "cli",
@@ -36,6 +36,7 @@
     ],
     "dependencies": {
         "arrify": "^1.0.1",
+        "async-throttle": "^1.0.0",
         "file-type": "^4.0.0",
         "fs-extra": "^1.0.0",
         "get-stdin": "^5.0.1",

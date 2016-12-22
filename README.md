@@ -37,17 +37,17 @@ npm install --save imagemin-power-cli
 
     Options:
 
-        -c, --config         Configuration for plugins, need export \`plugins\`.
-        -d, --cwd            Current working directory.
-        -p, --plugin         Override the default plugins.
-        -o, --out-dir        Output directory.
-        -r, --recursive      Run the command recursively.
-        -i, --ignore-errors  Not stop on errors (it works with only with <path|glob>).
-        -s  --silent         Reported only errors.
-        -v, --verbose        Reported everything.
+        -c, --config           Configuration for plugins, need export \`plugins\`.
+        -d, --cwd              Current working directory.
+        -m, --max-concurrency  Sets the maximum number of instances of Imagemin that can run at once.
+        -p, --plugin           Override the default plugins.
+        -o, --out-dir          Output directory.
+        -r, --recursive        Run the command recursively.
+        -i, --ignore-errors    Not stop on errors (it works with only with <path|glob>).
+        -s  --silent           Reported only errors.
+        -v, --verbose          Reported everything.
 
-    Examples:
-
+    Examples
         $ imagemin-power images/* --out-dir=build
         $ imagemin-power foo.png > foo-optimized.png
         $ cat foo.png | imagemin-power > foo-optimized.png

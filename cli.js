@@ -14,6 +14,8 @@ const path = require('path');
 const prettyBytes = require('pretty-bytes');
 const replaceExt = require('replace-ext');
 const stripIndent = require('strip-indent');
+const os = require('os');
+const createThrottle = require('async-throttle');
 
 const cli = meow(`
     Usage
@@ -30,14 +32,15 @@ const cli = meow(`
 
     Options:
 
-        -c, --config         Configuration for plugins, need export \`plugins\`.
-        -d, --cwd            Current working directory.
-        -p, --plugin         Override the default plugins.
-        -o, --out-dir        Output directory.
-        -r, --recursive      Run the command recursively.
-        -i, --ignore-errors  Not stop on errors (it works with only with <path|glob>).
-        -s  --silent         Reported only errors.
-        -v, --verbose        Reported everything.
+        -c, --config           Configuration for plugins, need export \`plugins\`.
+        -d, --cwd              Current working directory.
+        -m, --max-concurrency  Sets the maximum number of instances of Imagemin that can run at once.
+        -p, --plugin           Override the default plugins.
+        -o, --out-dir          Output directory.
+        -r, --recursive        Run the command recursively.
+        -i, --ignore-errors    Not stop on errors (it works with only with <path|glob>).
+        -s  --silent           Reported only errors.
+        -v, --verbose          Reported everything.
 
     Examples
         $ imagemin-power images/* --out-dir=build
@@ -147,6 +150,7 @@ const run = (input, options) => {
     const opts = Object.assign({
         config: null,
         cwd: process.cwd(),
+        maxConcurrency: os.cpus().length,
         // Info support multiple plugins
         plugin: DEFAULT_PLUGINS,
         recursive: false,
@@ -196,6 +200,8 @@ const run = (input, options) => {
         return Promise.reject(new TypeError('Expected an array'));
     }
 
+    const throttle = createThrottle(opts.maxConcurrency);
+
     let successCounter = 0;
     let failCounter = 0;
     let totalBytes = 0;
@@ -215,7 +221,7 @@ const run = (input, options) => {
                 process.exit(1); // eslint-disable-line no-process-exit
             }
 
-            return Promise.all(paths.map((filepath) => {
+            return Promise.all(paths.map((filepath) => throttle(() => {
                 const realFilepath = path.join(opts.cwd, filepath);
                 const total = paths.length;
 
@@ -265,7 +271,7 @@ const run = (input, options) => {
                             return Promise.reject(error);
                         }
                     );
-            }));
+            })));
         })
         .then((files) => {
             if (opts.verbose) {
@@ -298,6 +304,10 @@ if (cli.flags.config) {
 
 if (cli.flags.cwd) {
     optionsBase.cwd = cli.flags.cwd;
+}
+
+if (cli.flags.maxConcurrency) {
+    optionsBase.maxConcurrency = cli.flags.maxConcurrency;
 }
 
 if (cli.flags.plugin) {
