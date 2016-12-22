@@ -1,13 +1,23 @@
-# imagemin-power-cli 
+# imagemin-power-cli
 
-[![NPM version](https://img.shields.io/npm/v/imagemin-power-cli.svg)](https://www.npmjs.org/package/imagemin-power-cli) [![Travis Build Status](https://img.shields.io/travis/itgalaxy/imagemin-power-cli/master.svg?label=build)](https://travis-ci.org/itgalaxy/imagemin-power-cli) [![Coverage Status](https://coveralls.io/repos/github/itgalaxy/imagemin-power-cli/badge.svg?branch=master)](https://coveralls.io/github/itgalaxy/imagemin-power-cli?branch=master) [![dependencies Status](https://david-dm.org/itgalaxy/imagemin-power-cli/status.svg)](https://david-dm.org/itgalaxy/imagemin-power-cli) [![devDependencies Status](https://david-dm.org/itgalaxy/imagemin-power-cli/dev-status.svg)](https://david-dm.org/itgalaxy/imagemin-power-cli?type=dev)
+[![NPM version](https://img.shields.io/npm/v/imagemin-power-cli.svg)](https://www.npmjs.org/package/imagemin-power-cli) 
+[![Travis Build Status](https://img.shields.io/travis/itgalaxy/imagemin-power-cli/master.svg?label=build)](https://travis-ci.org/itgalaxy/imagemin-power-cli) 
+[![Coverage Status](https://coveralls.io/repos/github/itgalaxy/imagemin-power-cli/badge.svg?branch=master)](https://coveralls.io/github/itgalaxy/imagemin-power-cli?branch=master) 
+[![dependencies Status](https://david-dm.org/itgalaxy/imagemin-power-cli/status.svg)](https://david-dm.org/itgalaxy/imagemin-power-cli) 
+[![devDependencies Status](https://david-dm.org/itgalaxy/imagemin-power-cli/dev-status.svg)](https://david-dm.org/itgalaxy/imagemin-power-cli?type=dev)
 
-> Minify images with power :muscle: 
+Minify images with power :muscle: 
 
 ## Install
 
 ```shell
-$ npm install --global imagemin-power-cli
+npm install --global imagemin-power-cli
+```
+
+Also you can install package locally:
+
+```shell
+npm install --save imagemin-power-cli
 ```
 
 ## Usage
@@ -47,6 +57,10 @@ $ npm install --global imagemin-power-cli
 ## Related
 
 - [imagemin](https://github.com/imagemin/imagemin) - API for this module
+
+## Contribution
+
+Feel free to push your code if you agree with publishing under the MIT license.
 
 ## [Changelog](CHANGELOG.md)
 
