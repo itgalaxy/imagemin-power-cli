@@ -216,7 +216,7 @@ const run = (input, options) => {
             }
 
             return Promise.all(paths.map((filepath) => {
-                const realFilepath = path.resolve(path.join(opts.cwd, filepath));
+                const realFilepath = path.join(opts.cwd, filepath);
                 const total = paths.length;
 
                 return handleFile(realFilepath, opts)
