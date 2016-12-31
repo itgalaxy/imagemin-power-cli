@@ -70,7 +70,7 @@
         "execa": "^0.5.0",
         "imagemin-pngquant": "^5.0.0",
         "npmpub": "^3.1.0",
-        "npm-run-all": "^3.0.0",
+        "npm-run-all": "^4.0.0",
         "nyc": "^10.0.0",
         "pify": "^2.3.0",
         "remark-cli": "^2.0.0",
