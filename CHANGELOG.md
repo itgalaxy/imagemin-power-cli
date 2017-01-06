@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# Head
+
+- Fixed: used reported exit code if error occurred.
+
 # 0.4.0
 
 - Tests: improved test with option `max-concurrency`.
