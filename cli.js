@@ -231,7 +231,10 @@ const run = (input, options) => {
                             if (opts.verbose) {
                                 successCounter++;
 
+                                // `nyc` bugs with destructuring :(
+                                // eslint-disable-next-line prefer-destructuring
                                 const originalSize = result.originalSize;
+                                // eslint-disable-next-line prefer-destructuring
                                 const optimizedSize = result.optimizedSize;
                                 const saved = originalSize - optimizedSize;
                                 const percent = originalSize > 0 ? (saved / originalSize) * 100 : 0;
