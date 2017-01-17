@@ -43,7 +43,7 @@
         "globby": "^6.0.0",
         "imagemin": "^5.0.0",
         "meow": "^3.6.0",
-        "ora": "^0.4.0",
+        "ora": "^1.0.0",
         "plur": "^2.1.2",
         "pretty-bytes": "^4.0.0",
         "strip-indent": "^2.0.0",
