@@ -50,7 +50,7 @@
         "replace-ext": "^1.0.0"
     },
     "devDependencies": {
-        "ava": "^0.17.0",
+        "ava": "^0.18.0",
         "babel-cli": "^6.22.2",
         "babel-core": "^6.13.0",
         "babel-preset-es2015": "^6.13.0",
