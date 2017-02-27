@@ -88,7 +88,7 @@
         "coveralls": "nyc report --reporter=text-lcov | coveralls",
 
         "lint:eslint": "eslint . --ignore-pattern '**/__tests__/**' --ignore-path .gitignore",
-        "lint:remark": "remark '{**/*,*}.md' -i .gitignore -f -q",
+        "lint:remark": "remark . -i .gitignore -f -q",
         "lint": "npm-run-all -l -p lint:**",
 
         "ava": "nyc ava --verbose '**/__tests__/*.js'",
