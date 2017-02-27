@@ -124,5 +124,10 @@
             "plugin:itgalaxy/node"
         ],
         "root": true
+    },
+    "remarkConfig": {
+        "plugins": [
+            "remark-preset-lint-itgalaxy"
+        ]
     }
 }
