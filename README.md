@@ -56,7 +56,7 @@ npm install --save imagemin-power-cli
 
 ## Related
 
-- [imagemin](https://github.com/imagemin/imagemin) - API for this module
+-   [imagemin](https://github.com/imagemin/imagemin) - API for this module
 
 ## Contribution
 
