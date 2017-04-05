@@ -78,7 +78,7 @@ test('optimize with `config` argument', async (t) => {
 test('throw error if `config` argument not found', async (t) => {
     const buf = await fsP.readFile('fixtures/test.png');
 
-    t.throws(execa(cliPath, ['--config=invalid'], {
+    return t.throws(execa(cliPath, ['--config=invalid'], {
         input: buf
     }), /Cannot require "config"/);
 });
@@ -149,9 +149,10 @@ test('optimize a PNG use glob pattern and `verbose` argument', async (t) => {
     t.true(afterOptimizeData.length < beforeOptimizeData.length);
 });
 
-test('throw error on corrupt image use glob pattern', (t) => {
-    t.throws(execa(cliPath, ['fixtures/test-corrupt.jpg']));
-});
+test(
+    'throw error on corrupt image use glob pattern',
+    (t) => t.throws(execa(cliPath, ['fixtures/test-corrupt.jpg']))
+);
 
 test('throw error on corrupt image use `stdout`', async (t) => {
     const buf = await fsP.readFile('fixtures/test-corrupt.jpg');
