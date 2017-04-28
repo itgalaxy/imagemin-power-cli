@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# Head
+
+-   Chore: code refactoring.
+
 # 0.4.1 - 2017-03-13
 
 -   Fixed: used reported exit code if error occurred.

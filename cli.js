@@ -78,16 +78,7 @@ if (cli.input.length === 0 && process.stdin.isTTY) {
 }
 
 const handleFile
-    = (filepath, opts) => new Promise((resolve, reject) => {
-        fs.readFile(filepath, (error, data) => {
-            /* istanbul ignore if */
-            if (error) {
-                return reject(error);
-            }
-
-            return resolve(data);
-        });
-    })
+    = (filepath, opts) => fs.readFile(filepath)
         .then(
             (data) => imagemin.buffer(data, {
                 plugins: opts.plugin
@@ -108,16 +99,8 @@ const handleFile
                         path: fileType(buffer) && fileType(buffer).ext === 'webp' ? replaceExt(dest, '.webp') : dest
                     };
 
-                    return new Promise(
-                        (resolve, reject) => fs.outputFile(ret.path, ret.data, (error) => {
-                            /* istanbul ignore if */
-                            if (error) {
-                                return reject(error);
-                            }
-
-                            return resolve(ret);
-                        })
-                    );
+                    return fs.outputFile(ret.path, ret.data)
+                        .then(() => ret);
                 })
         );
 
@@ -128,7 +111,6 @@ const DEFAULT_PLUGINS = [
     'svgo'
 ];
 
-// eslint-disable-next-line consistent-return, array-callback-return
 const requirePlugins = (plugins) => plugins.map((plugin) => {
     try {
         // eslint-disable-next-line global-require, import/no-dynamic-require
@@ -197,7 +179,7 @@ const run = (input, options) => {
 
     /* istanbul ignore if */
     if (!Array.isArray(input)) {
-        return Promise.reject(new TypeError('Expected an array'));
+        throw new TypeError('Expected an array');
     }
 
     const throttle = createThrottle(opts.maxConcurrency);
@@ -231,7 +213,7 @@ const run = (input, options) => {
                             if (opts.verbose) {
                                 successCounter++;
 
-                                // `nyc` bugs with destructuring :(
+                                // Bug in nyc :sob:
                                 // eslint-disable-next-line prefer-destructuring
                                 const originalSize = result.originalSize;
                                 // eslint-disable-next-line prefer-destructuring
@@ -288,7 +270,7 @@ const run = (input, options) => {
                 spinner.stopAndPersist('ℹ');
             }
 
-            return Promise.resolve(files);
+            return files;
         })
         .catch((error) => {
             if (opts.verbose || opts.silent) {

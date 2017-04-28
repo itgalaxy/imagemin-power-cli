@@ -52,5 +52,5 @@ jspm_packages
 # Ignore compressed files
 *.min.*
 
-# Package
-dist
+# Caches
+.eslintcache

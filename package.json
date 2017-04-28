@@ -54,8 +54,7 @@
         "babel-cli": "^6.22.2",
         "babel-core": "^6.13.0",
         "babel-polyfill": "^6.23.0",
-        "babel-preset-es2015": "^6.13.0",
-        "babel-preset-stage-0": "^6.5.0",
+        "babel-preset-env": "^1.4.0",
         "babel-register": "^6.9.0",
         "coveralls": "^2.11.0",
         "eslint": "^3.14.0",
@@ -87,7 +86,7 @@
     "scripts": {
         "coveralls": "nyc report --reporter=text-lcov | coveralls",
 
-        "lint:eslint": "eslint . --ignore-pattern '**/__tests__/**' --ignore-path .gitignore",
+        "lint:eslint": "eslint . --cache --ignore-pattern '**/__tests__/**' --ignore-path .gitignore",
         "lint:remark": "remark . -i .gitignore -f -q",
         "lint": "npm-run-all -l -p lint:**",
 
@@ -100,8 +99,15 @@
     },
     "babel": {
         "presets": [
-            "es2015",
-            "stage-0"
+           [
+               "env",
+                {
+                    "targets": {
+                        "node": 4.2
+                    },
+                    "useBuiltIns": true
+                }
+           ]
         ]
     },
     "ava": {
@@ -113,15 +119,10 @@
         "babel": "inherit"
     },
     "eslintConfig": {
-        "rules": {
-            "import/no-commonjs": "off",
-
-            "node/shebang": "off"
-        },
         "extends": [
             "plugin:itgalaxy/ava",
-            "plugin:itgalaxy/esnext",
-            "plugin:itgalaxy/node"
+            "plugin:itgalaxy/node",
+            "plugin:itgalaxy/esnext"
         ],
         "root": true
     },
