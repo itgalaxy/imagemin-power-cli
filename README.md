@@ -1,5 +1,7 @@
 # imagemin-power-cli
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/itgalaxy/imagemin-power-cli.svg)](https://greenkeeper.io/)
+
 [![NPM version](https://img.shields.io/npm/v/imagemin-power-cli.svg)](https://www.npmjs.org/package/imagemin-power-cli) 
 [![Travis Build Status](https://img.shields.io/travis/itgalaxy/imagemin-power-cli/master.svg?label=build)](https://travis-ci.org/itgalaxy/imagemin-power-cli) 
 [![Coverage Status](https://coveralls.io/repos/github/itgalaxy/imagemin-power-cli/badge.svg?branch=master)](https://coveralls.io/github/itgalaxy/imagemin-power-cli?branch=master) 
