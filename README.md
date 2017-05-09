@@ -5,6 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/itgalaxy/imagemin-power-cli/badge.svg?branch=master)](https://coveralls.io/github/itgalaxy/imagemin-power-cli?branch=master) 
 [![dependencies Status](https://david-dm.org/itgalaxy/imagemin-power-cli/status.svg)](https://david-dm.org/itgalaxy/imagemin-power-cli) 
 [![devDependencies Status](https://david-dm.org/itgalaxy/imagemin-power-cli/dev-status.svg)](https://david-dm.org/itgalaxy/imagemin-power-cli?type=dev)
+[![Greenkeeper badge](https://badges.greenkeeper.io/itgalaxy/imagemin-power-cli.svg)](https://greenkeeper.io/)
 
 Minify images with power :muscle: 
 
