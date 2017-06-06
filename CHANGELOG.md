@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# Head
+# 1.0.1 - 2017-06-06
 
 -   Chore: minimum required `file-type` version is now `^5.0.0`.
 
