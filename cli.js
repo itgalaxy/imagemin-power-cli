@@ -89,10 +89,7 @@ const handleFile = (filepath, opts) =>
                 }
 
                 const outDir = !path.isAbsolute(opts.outDir)
-                    ? path.join(
-                          opts.cwd ? opts.cwd : process.cwd(),
-                          opts.outDir
-                      )
+                    ? path.join(opts.cwd, opts.outDir)
                     : path.normalize(opts.outDir);
 
                 const dest = path.resolve(
@@ -220,10 +217,7 @@ const run = (input, options) => {
                 paths.map(filePath =>
                     throttle(() => {
                         const absoluteFilepath = !path.isAbsolute(filePath)
-                            ? path.join(
-                                  opts.cwd ? opts.cwd : process.cwd(),
-                                  filePath
-                              )
+                            ? path.join(opts.cwd, filePath)
                             : path.normalize(filePath);
                         const total = paths.length;
 
