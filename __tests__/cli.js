@@ -10,7 +10,10 @@ const fsP = pify(fs);
 const cliPath = path.resolve(__dirname, '../cli.js');
 
 test('show help screen', async t => {
-    t.regex(await execa.stdout(cliPath, ['--help']), /Minify images/);
+    t.regex(
+        await execa.stdout(cliPath, ['--help']),
+        /Optimize \(compress\) images/
+    );
 });
 
 test('show `version`', async t => {
@@ -93,10 +96,25 @@ test('throw error if `config` argument not found', async t => {
     );
 });
 
-test('optimize a PNG use glob pattern argument', async t => {
+test('optimize a PNG use relative glob pattern argument and relative out-dir argument', async t => {
     await execa(cliPath, [
         'fixtures/test.png',
         '--out-dir=./fixtures/tmp',
+        '--plugin=pngquant'
+    ]);
+    const beforeOptimizeData = await fsP.readFile('fixtures/test.png');
+    const afterOptimizeData = await fsP.readFile('fixtures/tmp/test.png');
+
+    t.true(afterOptimizeData.length < beforeOptimizeData.length);
+});
+
+test('optimize a PNG use absolute glob pattern argument and absolute out-dir argument', async t => {
+    const filePath = path.join(process.cwd(), 'fixtures/test.png');
+    const outDir = path.join(process.cwd(), 'fixtures/tmp');
+
+    await execa(cliPath, [
+        filePath,
+        `--out-dir=${outDir}`,
         '--plugin=pngquant'
     ]);
     const beforeOptimizeData = await fsP.readFile('fixtures/test.png');
@@ -140,7 +158,7 @@ test('optimize a PNG use glob pattern and `recursive` argument', async t => {
 test('optimize a PNG use glob pattern, `cwd` and `recursive` argument', async t => {
     await execa(cliPath, [
         'image/folder/test.png',
-        '--out-dir=fixtures/tmp',
+        '--out-dir=../tmp',
         '--plugin=pngquant',
         '--cwd=fixtures/deep',
         '--recursive'
@@ -165,7 +183,7 @@ test('optimize a PNG use glob pattern and `verbose` argument', async t => {
     const beforeOptimizeData = await fsP.readFile('fixtures/test.png');
     const afterOptimizeData = await fsP.readFile('fixtures/tmp/test.png');
 
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.png"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.png"/);
     t.regex(
         output.stderr,
         /Successfully compressed images: 1\. Unsuccessfully compressed images: 0\. Total images: 1\./
@@ -208,7 +226,7 @@ test('optimize a corrupt image use `verbose` and `ignore-errors` arguments', asy
         '--ignore-errors'
     ]);
 
-    t.regex(output.stderr, /Minifying image "fixtures\/test-corrupt\.jpg"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test-corrupt\.jpg"/);
     t.regex(output.stderr, /Error: Corrupt JPEG data/);
     t.regex(output.stderr, /Unsuccessfully compressed images: 1/);
 });
@@ -222,9 +240,9 @@ test('optimize a corrupt image and a normal image use `verbose` and `ignore-erro
         '--ignore-errors'
     ]);
 
-    t.regex(output.stderr, /Minifying image "fixtures\/test-corrupt\.jpg"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test-corrupt\.jpg"/);
     t.regex(output.stderr, /Error: Corrupt JPEG data/);
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.jpg"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.jpg"/);
     t.regex(
         output.stderr,
         /Successfully compressed images: 1\. Unsuccessfully compressed images: 1\. Total images: 2\./
@@ -238,7 +256,7 @@ test('optimize a corrupt image use `silent` and `ignore-errors` arguments', asyn
         '--ignore-errors'
     ]);
 
-    t.regex(output.stderr, /Minifying image "fixtures\/test-corrupt\.jpg"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test-corrupt\.jpg"/);
     t.regex(output.stderr, /Error: Corrupt JPEG data/);
 });
 
@@ -251,7 +269,7 @@ test('optimize a corrupt image and a normal image use `silent` and `ignore-error
         '--ignore-errors'
     ]);
 
-    t.regex(output.stderr, /Minifying image "fixtures\/test-corrupt\.jpg"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test-corrupt\.jpg"/);
     t.regex(output.stderr, /Error: Corrupt JPEG data/);
     t.notRegex(
         output.stderr,
@@ -267,11 +285,11 @@ test('optimize images use `verbose` and `ignore-errors` arguments', async t => {
         '--ignore-errors'
     ]);
 
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.jpg"/);
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.png"/);
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.webp"/);
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.gif"/);
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.svg"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.jpg"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.png"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.webp"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.gif"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.svg"/);
     t.regex(
         output.stderr,
         /Successfully compressed images: 5\. Unsuccessfully compressed images: 0\. Total images: 5\./
@@ -287,11 +305,11 @@ test('optimize images use `verbose`, `ignore-errors`, `max-concurrency` argument
         '--max-concurrency=4'
     ]);
 
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.jpg"/);
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.png"/);
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.webp"/);
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.gif"/);
-    t.regex(output.stderr, /Minifying image "fixtures\/test\.svg"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.jpg"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.png"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.webp"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.gif"/);
+    t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.svg"/);
     t.regex(
         output.stderr,
         /Successfully compressed images: 5\. Unsuccessfully compressed images: 0\. Total images: 5\./

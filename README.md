@@ -7,7 +7,7 @@
 [![devDependencies Status](https://david-dm.org/itgalaxy/imagemin-power-cli/dev-status.svg)](https://david-dm.org/itgalaxy/imagemin-power-cli?type=dev)
 [![Greenkeeper badge](https://badges.greenkeeper.io/itgalaxy/imagemin-power-cli.svg)](https://greenkeeper.io/)
 
-Minify images with power :muscle: 
+Optimize (compress) images with power using [imagemin](https://github.com/imagemin/imagemin) :muscle: 
 
 ## Install
 
@@ -32,8 +32,8 @@ npm install --save imagemin-power-cli
     Input: Files(s), glob(s), or nothing to use stdin.
       
         If an input argument is wrapped in quotation marks, it will be passed to
-        node-glob for cross-platform glob support. node_modules and
-        bower_components are always ignored. You can also pass no input and use
+        node-glob for cross-platform glob support. \`node_modules\` and
+        \`bower_components\` are always ignored. You can also pass no input and use
         stdin, instead.
 
     Options:
@@ -42,7 +42,7 @@ npm install --save imagemin-power-cli
         -d, --cwd              Current working directory.
         -m, --max-concurrency  Sets the maximum number of instances of Imagemin that can run at once.
         -p, --plugin           Override the default plugins.
-        -o, --out-dir          Output directory.
+        -o, --out-dir          Output directory (respect \`cwd\` argument).
         -r, --recursive        Run the command recursively.
         -i, --ignore-errors    Not stop on errors (it works with only with <path|glob>).
         -s  --silent           Reported only errors.

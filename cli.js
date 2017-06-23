@@ -27,8 +27,8 @@ const cli = meow(
     Input: Files(s), glob(s), or nothing to use stdin.
       
         If an input argument is wrapped in quotation marks, it will be passed to
-        node-glob for cross-platform glob support. node_modules and
-        bower_components are always ignored. You can also pass no input and use
+        node-glob for cross-platform glob support. \`node_modules\` and
+        \`bower_components\` are always ignored. You can also pass no input and use
         stdin, instead.
 
     Options:
@@ -37,7 +37,7 @@ const cli = meow(
         -d, --cwd              Current working directory.
         -m, --max-concurrency  Sets the maximum number of instances of Imagemin that can run at once.
         -p, --plugin           Override the default plugins.
-        -o, --out-dir          Output directory.
+        -o, --out-dir          Output directory (respect \`cwd\` argument).
         -r, --recursive        Run the command recursively.
         -i, --ignore-errors    Not stop on errors (it works with only with <path|glob>).
         -s  --silent           Reported only errors.
@@ -88,12 +88,15 @@ const handleFile = (filepath, opts) =>
                     );
                 }
 
+                const outDir = !path.isAbsolute(opts.outDir)
+                    ? path.join(
+                          opts.cwd ? opts.cwd : process.cwd(),
+                          opts.outDir
+                      )
+                    : path.normalize(opts.outDir);
+
                 const dest = path.resolve(
-                    path.join(
-                        opts.outDir,
-                        parentDirectory,
-                        path.basename(filepath)
-                    )
+                    path.join(outDir, parentDirectory, path.basename(filepath))
                 );
 
                 const ret = {
@@ -214,12 +217,17 @@ const run = (input, options) => {
             }
 
             return Promise.all(
-                paths.map(filepath =>
+                paths.map(filePath =>
                     throttle(() => {
-                        const realFilepath = path.join(opts.cwd, filepath);
+                        const absoluteFilepath = !path.isAbsolute(filePath)
+                            ? path.join(
+                                  opts.cwd ? opts.cwd : process.cwd(),
+                                  filePath
+                              )
+                            : path.normalize(filePath);
                         const total = paths.length;
 
-                        return handleFile(realFilepath, opts).then(
+                        return handleFile(absoluteFilepath, opts).then(
                             result => {
                                 if (opts.verbose) {
                                     successCounter++;
@@ -243,7 +251,7 @@ const run = (input, options) => {
                                     totalSavedBytes += saved;
 
                                     spinner.text =
-                                        `Minifying image "${filepath}" ` +
+                                        `Minifying image "${absoluteFilepath}" ` +
                                         `(${successCounter +
                                             failCounter} of ${total})` +
                                         `${saved > 0
@@ -254,7 +262,7 @@ const run = (input, options) => {
                                     spinner.start();
                                 }
 
-                                return filepath;
+                                return absoluteFilepath;
                             },
                             error => {
                                 if (opts.ignoreErrors) {
@@ -262,7 +270,7 @@ const run = (input, options) => {
                                         failCounter++;
 
                                         spinner.text =
-                                            `Minifying image "${filepath}" ` +
+                                            `Minifying image "${absoluteFilepath}" ` +
                                             `(${successCounter +
                                                 failCounter} of ${total})...\nError: ${error.stack}...`;
                                         spinner.fail();
