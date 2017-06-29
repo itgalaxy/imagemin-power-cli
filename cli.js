@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 
-'use strict'; // eslint-disable-line strict, lines-around-directive
+"use strict"; // eslint-disable-line strict, lines-around-directive
 
-const arrify = require('arrify');
-const fileType = require('file-type');
-const fs = require('fs-extra');
-const getStdin = require('get-stdin');
-const globby = require('globby');
-const imagemin = require('imagemin');
-const meow = require('meow');
-const ora = require('ora');
-const path = require('path');
-const prettyBytes = require('pretty-bytes');
-const replaceExt = require('replace-ext');
-const stripIndent = require('strip-indent');
-const os = require('os');
-const createThrottle = require('async-throttle');
+const arrify = require("arrify");
+const fileType = require("file-type");
+const fs = require("fs-extra");
+const getStdin = require("get-stdin");
+const globby = require("globby");
+const imagemin = require("imagemin");
+const meow = require("meow");
+const ora = require("ora");
+const path = require("path");
+const prettyBytes = require("pretty-bytes");
+const replaceExt = require("replace-ext");
+const stripIndent = require("strip-indent");
+const os = require("os");
+const createThrottle = require("async-throttle");
 
 const cli = meow(
     `
@@ -52,18 +52,18 @@ const cli = meow(
     {
         alias: {
             /* eslint-disable id-length */
-            c: 'config',
-            d: 'cwd',
-            i: 'ignore-errors',
-            o: 'out-dir',
-            p: 'plugin',
-            r: 'recursive',
-            s: 'silent',
-            v: 'verbose'
+            c: "config",
+            d: "cwd",
+            i: "ignore-errors",
+            o: "out-dir",
+            p: "plugin",
+            r: "recursive",
+            s: "silent",
+            v: "verbose"
             /* eslint-enable id-length */
         },
-        boolean: ['recursive', 'ignore-errors', 'verbose'],
-        string: ['config', 'cwd', 'out-dir']
+        boolean: ["recursive", "ignore-errors", "verbose"],
+        string: ["config", "cwd", "out-dir"]
     }
 );
 
@@ -79,7 +79,7 @@ const handleFile = (filepath, opts) =>
                 plugins: opts.plugin
             })
             .then(buffer => {
-                let parentDirectory = '';
+                let parentDirectory = "";
 
                 if (opts.recursive) {
                     parentDirectory = path.relative(
@@ -100,16 +100,17 @@ const handleFile = (filepath, opts) =>
                     data: buffer,
                     optimizedSize: buffer.length,
                     originalSize: data.length,
-                    path: fileType(buffer) && fileType(buffer).ext === 'webp'
-                        ? replaceExt(dest, '.webp')
-                        : dest
+                    path:
+                        fileType(buffer) && fileType(buffer).ext === "webp"
+                            ? replaceExt(dest, ".webp")
+                            : dest
                 };
 
                 return fs.outputFile(ret.path, ret.data).then(() => ret);
             })
     );
 
-const DEFAULT_PLUGINS = ['gifsicle', 'jpegtran', 'optipng', 'svgo'];
+const DEFAULT_PLUGINS = ["gifsicle", "jpegtran", "optipng", "svgo"];
 
 const requirePlugins = plugins =>
     plugins.map(plugin => {
@@ -148,7 +149,7 @@ const run = (input, options) => {
         options
     );
 
-    const dataSource = opts.config || path.resolve('./.imagemin.js');
+    const dataSource = opts.config || path.resolve("./.imagemin.js");
 
     if (opts.config) {
         let config = null;
@@ -180,14 +181,14 @@ const run = (input, options) => {
         spinner = ora();
 
         if (opts.verbose) {
-            spinner.text = 'Starting minifying images...';
+            spinner.text = "Starting minifying images...";
             spinner.start();
         }
     }
 
     /* istanbul ignore if */
     if (!Array.isArray(input)) {
-        throw new TypeError('Expected an array');
+        throw new TypeError("Expected an array");
     }
 
     const throttle = createThrottle(opts.maxConcurrency);
@@ -208,7 +209,7 @@ const run = (input, options) => {
             if (!opts.outDir && paths.length > 1) {
                 // eslint-disable-next-line no-console
                 console.error(
-                    'Cannot write multiple files to stdout, specify a `--out-dir`'
+                    "Cannot write multiple files to stdout, specify a `--out-dir`"
                 );
                 process.exit(1); // eslint-disable-line no-process-exit
             }
@@ -232,14 +233,15 @@ const run = (input, options) => {
                                     // eslint-disable-next-line prefer-destructuring
                                     const optimizedSize = result.optimizedSize;
                                     const saved = originalSize - optimizedSize;
-                                    const percent = originalSize > 0
-                                        ? saved / originalSize * 100
-                                        : 0;
+                                    const percent =
+                                        originalSize > 0
+                                            ? saved / originalSize * 100
+                                            : 0;
                                     const savedMsg =
                                         `saved ${prettyBytes(saved)} ` +
                                         `- ${percent
                                             .toFixed(1)
-                                            .replace(/\.0$/, '')}%`;
+                                            .replace(/\.0$/, "")}%`;
 
                                     totalBytes += originalSize;
                                     totalSavedBytes += saved;
@@ -250,9 +252,9 @@ const run = (input, options) => {
                                             failCounter} of ${total})` +
                                         `${saved > 0
                                             ? ` - ${savedMsg}`
-                                            : ' - already optimized'}...`;
+                                            : " - already optimized"}...`;
                                     spinner.succeed();
-                                    spinner.text = 'Minifying images...';
+                                    spinner.text = "Minifying images...";
                                     spinner.start();
                                 }
 
@@ -269,7 +271,7 @@ const run = (input, options) => {
                                                 failCounter} of ${total})...\nError: ${error.stack}...`;
                                         spinner.fail();
 
-                                        spinner.text = 'Minifying images...';
+                                        spinner.text = "Minifying images...";
                                         spinner.start();
                                     }
 
@@ -285,9 +287,8 @@ const run = (input, options) => {
         })
         .then(files => {
             if (opts.verbose) {
-                const percent = totalBytes > 0
-                    ? totalSavedBytes / totalBytes * 100
-                    : 0;
+                const percent =
+                    totalBytes > 0 ? totalSavedBytes / totalBytes * 100 : 0;
 
                 spinner.text =
                     `Successfully compressed images: ${successCounter}. ` +
@@ -297,7 +298,7 @@ const run = (input, options) => {
                     `Total saved size: ${prettyBytes(
                         totalSavedBytes
                     )} - ${percent}%. `;
-                spinner.stopAndPersist('ℹ');
+                spinner.stopAndPersist("ℹ");
             }
 
             return files;
@@ -354,7 +355,7 @@ if (cli.input.length > 0) {
     getStdin.buffer().then(buf => run(buf, cli.flags)).catch(error => {
         console.error(error.stack); // eslint-disable-line no-console
 
-        const exitCode = typeof error.code === 'number' ? error.code : 1;
+        const exitCode = typeof error.code === "number" ? error.code : 1;
 
         process.exit(exitCode); // eslint-disable-line no-process-exit
     });

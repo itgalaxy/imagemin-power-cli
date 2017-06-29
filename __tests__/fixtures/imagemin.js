@@ -1,7 +1,7 @@
 // eslint-disable-next-line strict, lines-around-directive
-'use strict';
+"use strict";
 
-const imageminPngquant = require('imagemin-pngquant');
+const imageminPngquant = require("imagemin-pngquant");
 
 module.exports = {
     plugins: [imageminPngquant()]

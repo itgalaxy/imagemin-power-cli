@@ -1,31 +1,31 @@
-import execa from 'execa';
-import fs from 'fs-extra';
-import path from 'path';
-import pify from 'pify';
-import test from 'ava';
+import execa from "execa";
+import fs from "fs-extra";
+import path from "path";
+import pify from "pify";
+import test from "ava";
 
 process.chdir(__dirname);
 
 const fsP = pify(fs);
-const cliPath = path.resolve(__dirname, '../cli.js');
+const cliPath = path.resolve(__dirname, "../cli.js");
 
-test('show help screen', async t => {
+test("show help screen", async t => {
     t.regex(
-        await execa.stdout(cliPath, ['--help']),
+        await execa.stdout(cliPath, ["--help"]),
         /Optimize \(compress\) images/
     );
 });
 
-test('show `version`', async t => {
+test("show `version`", async t => {
     t.is(
-        await execa.stdout(cliPath, ['--version']),
+        await execa.stdout(cliPath, ["--version"]),
         // eslint-disable-next-line global-require
-        require('../package.json').version
+        require("../package.json").version
     );
 });
 
-test('optimize a GIF', async t => {
-    const buf = await fsP.readFile('fixtures/test.gif');
+test("optimize a GIF", async t => {
+    const buf = await fsP.readFile("fixtures/test.gif");
     const stdout = await execa.stdout(cliPath, {
         input: buf
     });
@@ -33,8 +33,8 @@ test('optimize a GIF', async t => {
     t.true(stdout.length < buf.length);
 });
 
-test('optimize a JPG', async t => {
-    const buf = await fsP.readFile('fixtures/test.jpg');
+test("optimize a JPG", async t => {
+    const buf = await fsP.readFile("fixtures/test.jpg");
     const stdout = await execa.stdout(cliPath, {
         input: buf
     });
@@ -42,8 +42,8 @@ test('optimize a JPG', async t => {
     t.true(stdout.length < buf.length);
 });
 
-test('optimize a PNG', async t => {
-    const buf = await fsP.readFile('fixtures/test.png');
+test("optimize a PNG", async t => {
+    const buf = await fsP.readFile("fixtures/test.png");
     const stdout = await execa.stdout(cliPath, {
         input: buf
     });
@@ -51,8 +51,8 @@ test('optimize a PNG', async t => {
     t.true(stdout.length < buf.length);
 });
 
-test('optimize a SVG', async t => {
-    const buf = await fsP.readFile('fixtures/test.svg');
+test("optimize a SVG", async t => {
+    const buf = await fsP.readFile("fixtures/test.svg");
     const stdout = await execa.stdout(cliPath, {
         input: buf
     });
@@ -60,8 +60,8 @@ test('optimize a SVG', async t => {
     t.true(stdout.length < buf.length);
 });
 
-test('optimize a WebP', async t => {
-    const buf = await fsP.readFile('fixtures/test.webp');
+test("optimize a WebP", async t => {
+    const buf = await fsP.readFile("fixtures/test.webp");
     const stdout = await execa.stdout(cliPath, {
         input: buf
     });
@@ -69,11 +69,11 @@ test('optimize a WebP', async t => {
     t.true(stdout.length < buf.length);
 });
 
-test('optimize with `config` argument', async t => {
-    const buf = await fsP.readFile('fixtures/test.png');
+test("optimize with `config` argument", async t => {
+    const buf = await fsP.readFile("fixtures/test.png");
     const data = await execa.stdout(
         cliPath,
-        ['--config=./fixtures/imagemin.js'],
+        ["--config=./fixtures/imagemin.js"],
         {
             input: buf
         }
@@ -85,103 +85,108 @@ test('optimize with `config` argument', async t => {
     t.true(data.length < compareData.length);
 });
 
-test('throw error if `config` argument not found', async t => {
-    const buf = await fsP.readFile('fixtures/test.png');
+test("throw error if `config` argument not found", async t => {
+    const buf = await fsP.readFile("fixtures/test.png");
 
     return t.throws(
-        execa(cliPath, ['--config=invalid'], {
+        execa(cliPath, ["--config=invalid"], {
             input: buf
         }),
         /Cannot require "config"/
     );
 });
 
-test('optimize a PNG use relative glob pattern argument and relative out-dir argument', async t => {
+test("optimize a PNG use relative glob pattern argument and relative out-dir argument", async t => {
     await execa(cliPath, [
-        'fixtures/test.png',
-        '--out-dir=./fixtures/tmp',
-        '--plugin=pngquant'
+        "fixtures/test.png",
+        "--out-dir=./fixtures/tmp",
+        "--plugin=pngquant"
     ]);
-    const beforeOptimizeData = await fsP.readFile('fixtures/test.png');
-    const afterOptimizeData = await fsP.readFile('fixtures/tmp/test.png');
+
+    const beforeOptimizeData = await fsP.readFile("fixtures/test.png");
+    const afterOptimizeData = await fsP.readFile("fixtures/tmp/test.png");
 
     t.true(afterOptimizeData.length < beforeOptimizeData.length);
 });
 
-test('optimize a PNG use absolute glob pattern argument and absolute out-dir argument', async t => {
-    const filePath = path.join(process.cwd(), 'fixtures/test.png');
-    const outDir = path.join(process.cwd(), 'fixtures/tmp');
+test("optimize a PNG use absolute glob pattern argument and absolute out-dir argument", async t => {
+    const filePath = path.join(process.cwd(), "fixtures/test.png");
+    const outDir = path.join(process.cwd(), "fixtures/tmp");
 
     await execa(cliPath, [
         filePath,
         `--out-dir=${outDir}`,
-        '--plugin=pngquant'
+        "--plugin=pngquant"
     ]);
-    const beforeOptimizeData = await fsP.readFile('fixtures/test.png');
-    const afterOptimizeData = await fsP.readFile('fixtures/tmp/test.png');
+
+    const beforeOptimizeData = await fsP.readFile("fixtures/test.png");
+    const afterOptimizeData = await fsP.readFile("fixtures/tmp/test.png");
 
     t.true(afterOptimizeData.length < beforeOptimizeData.length);
 });
 
-test('optimize a PNG use glob pattern and `cwd` argument', async t => {
+test("optimize a PNG use glob pattern and `cwd` argument", async t => {
     await execa(cliPath, [
-        'image/folder/test.png',
-        '--out-dir=fixtures/tmp',
-        '--plugin=pngquant',
-        '--cwd=fixtures/deep'
+        "image/folder/test.png",
+        "--out-dir=fixtures/tmp",
+        "--plugin=pngquant",
+        "--cwd=fixtures/deep"
     ]);
+
     const beforeOptimizeData = await fsP.readFile(
-        'fixtures/deep/image/folder/test.png'
+        "fixtures/deep/image/folder/test.png"
     );
-    const afterOptimizeData = await fsP.readFile('fixtures/tmp/test.png');
+    const afterOptimizeData = await fsP.readFile("fixtures/tmp/test.png");
 
     t.true(afterOptimizeData.length < beforeOptimizeData.length);
 });
 
-test('optimize a PNG use glob pattern and `recursive` argument', async t => {
+test("optimize a PNG use glob pattern and `recursive` argument", async t => {
     await execa(cliPath, [
-        'fixtures/deep/image/folder/test.png',
-        '--out-dir=fixtures/tmp',
-        '--plugin=pngquant',
-        '--recursive'
+        "fixtures/deep/image/folder/test.png",
+        "--out-dir=fixtures/tmp",
+        "--plugin=pngquant",
+        "--recursive"
     ]);
+
     const beforeOptimizeData = await fsP.readFile(
-        'fixtures/deep/image/folder/test.png'
+        "fixtures/deep/image/folder/test.png"
     );
     const afterOptimizeData = await fsP.readFile(
-        'fixtures/tmp/fixtures/deep/image/folder/test.png'
+        "fixtures/tmp/fixtures/deep/image/folder/test.png"
     );
 
     t.true(afterOptimizeData.length < beforeOptimizeData.length);
 });
 
-test('optimize a PNG use glob pattern, `cwd` and `recursive` argument', async t => {
+test("optimize a PNG use glob pattern, `cwd` and `recursive` argument", async t => {
     await execa(cliPath, [
-        'image/folder/test.png',
-        '--out-dir=../tmp',
-        '--plugin=pngquant',
-        '--cwd=fixtures/deep',
-        '--recursive'
+        "image/folder/test.png",
+        "--out-dir=../tmp",
+        "--plugin=pngquant",
+        "--cwd=fixtures/deep",
+        "--recursive"
     ]);
+
     const beforeOptimizeData = await fsP.readFile(
-        'fixtures/deep/image/folder/test.png'
+        "fixtures/deep/image/folder/test.png"
     );
     const afterOptimizeData = await fsP.readFile(
-        'fixtures/tmp/image/folder/test.png'
+        "fixtures/tmp/image/folder/test.png"
     );
 
     t.true(afterOptimizeData.length < beforeOptimizeData.length);
 });
 
-test('optimize a PNG use glob pattern and `verbose` argument', async t => {
+test("optimize a PNG use glob pattern and `verbose` argument", async t => {
     const output = await execa(cliPath, [
-        'fixtures/test.png',
-        '--out-dir=fixtures/tmp',
-        '--plugin=pngquant',
-        '--verbose'
+        "fixtures/test.png",
+        "--out-dir=fixtures/tmp",
+        "--plugin=pngquant",
+        "--verbose"
     ]);
-    const beforeOptimizeData = await fsP.readFile('fixtures/test.png');
-    const afterOptimizeData = await fsP.readFile('fixtures/tmp/test.png');
+    const beforeOptimizeData = await fsP.readFile("fixtures/test.png");
+    const afterOptimizeData = await fsP.readFile("fixtures/tmp/test.png");
 
     t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.png"/);
     t.regex(
@@ -191,11 +196,11 @@ test('optimize a PNG use glob pattern and `verbose` argument', async t => {
     t.true(afterOptimizeData.length < beforeOptimizeData.length);
 });
 
-test('throw error on corrupt image use glob pattern', t =>
-    t.throws(execa(cliPath, ['fixtures/test-corrupt.jpg'])));
+test("throw error on corrupt image use glob pattern", t =>
+    t.throws(execa(cliPath, ["fixtures/test-corrupt.jpg"])));
 
-test('throw error on corrupt image use `stdout`', async t => {
-    const buf = await fsP.readFile('fixtures/test-corrupt.jpg');
+test("throw error on corrupt image use `stdout`", async t => {
+    const buf = await fsP.readFile("fixtures/test-corrupt.jpg");
     const output = await t.throws(
         execa(cliPath, {
             input: buf
@@ -206,9 +211,9 @@ test('throw error on corrupt image use `stdout`', async t => {
     t.regex(output.stderr, /Error: Corrupt JPEG data/);
 });
 
-test('throw error on corrupt image use glob pattern and `verbose` argument', async t => {
+test("throw error on corrupt image use glob pattern and `verbose` argument", async t => {
     const output = await t.throws(
-        execa(cliPath, ['fixtures/test-corrupt.jpg', '--verbose'])
+        execa(cliPath, ["fixtures/test-corrupt.jpg", "--verbose"])
     );
 
     t.true(output.code === 1);
@@ -219,11 +224,11 @@ test('throw error on corrupt image use glob pattern and `verbose` argument', asy
     );
 });
 
-test('optimize a corrupt image use `verbose` and `ignore-errors` arguments', async t => {
+test("optimize a corrupt image use `verbose` and `ignore-errors` arguments", async t => {
     const output = await execa(cliPath, [
-        'fixtures/test-corrupt.jpg',
-        '--verbose',
-        '--ignore-errors'
+        "fixtures/test-corrupt.jpg",
+        "--verbose",
+        "--ignore-errors"
     ]);
 
     t.regex(output.stderr, /Minifying image ".*?fixtures\/test-corrupt\.jpg"/);
@@ -231,13 +236,13 @@ test('optimize a corrupt image use `verbose` and `ignore-errors` arguments', asy
     t.regex(output.stderr, /Unsuccessfully compressed images: 1/);
 });
 
-test('optimize a corrupt image and a normal image use `verbose` and `ignore-errors` arguments', async t => {
+test("optimize a corrupt image and a normal image use `verbose` and `ignore-errors` arguments", async t => {
     const output = await execa(cliPath, [
-        'fixtures/test-corrupt.jpg',
-        'fixtures/test.jpg',
-        '--out-dir=fixtures/tmp',
-        '--verbose',
-        '--ignore-errors'
+        "fixtures/test-corrupt.jpg",
+        "fixtures/test.jpg",
+        "--out-dir=fixtures/tmp",
+        "--verbose",
+        "--ignore-errors"
     ]);
 
     t.regex(output.stderr, /Minifying image ".*?fixtures\/test-corrupt\.jpg"/);
@@ -249,24 +254,24 @@ test('optimize a corrupt image and a normal image use `verbose` and `ignore-erro
     );
 });
 
-test('optimize a corrupt image use `silent` and `ignore-errors` arguments', async t => {
+test("optimize a corrupt image use `silent` and `ignore-errors` arguments", async t => {
     const output = await execa(cliPath, [
-        'fixtures/test-corrupt.jpg',
-        '--silent',
-        '--ignore-errors'
+        "fixtures/test-corrupt.jpg",
+        "--silent",
+        "--ignore-errors"
     ]);
 
     t.regex(output.stderr, /Minifying image ".*?fixtures\/test-corrupt\.jpg"/);
     t.regex(output.stderr, /Error: Corrupt JPEG data/);
 });
 
-test('optimize a corrupt image and a normal image use `silent` and `ignore-errors` arguments', async t => {
+test("optimize a corrupt image and a normal image use `silent` and `ignore-errors` arguments", async t => {
     const output = await execa(cliPath, [
-        'fixtures/test-corrupt.jpg',
-        'fixtures/test.jpg',
-        '--out-dir=fixtures/tmp',
-        '--silent',
-        '--ignore-errors'
+        "fixtures/test-corrupt.jpg",
+        "fixtures/test.jpg",
+        "--out-dir=fixtures/tmp",
+        "--silent",
+        "--ignore-errors"
     ]);
 
     t.regex(output.stderr, /Minifying image ".*?fixtures\/test-corrupt\.jpg"/);
@@ -277,12 +282,12 @@ test('optimize a corrupt image and a normal image use `silent` and `ignore-error
     );
 });
 
-test('optimize images use `verbose` and `ignore-errors` arguments', async t => {
+test("optimize images use `verbose` and `ignore-errors` arguments", async t => {
     const output = await execa(cliPath, [
-        'fixtures/test.{jpg,png,webp,gif,svg}',
-        '--out-dir=fixtures/tmp',
-        '--verbose',
-        '--ignore-errors'
+        "fixtures/test.{jpg,png,webp,gif,svg}",
+        "--out-dir=fixtures/tmp",
+        "--verbose",
+        "--ignore-errors"
     ]);
 
     t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.jpg"/);
@@ -296,13 +301,13 @@ test('optimize images use `verbose` and `ignore-errors` arguments', async t => {
     );
 });
 
-test('optimize images use `verbose`, `ignore-errors`, `max-concurrency` arguments', async t => {
+test("optimize images use `verbose`, `ignore-errors`, `max-concurrency` arguments", async t => {
     const output = await execa(cliPath, [
-        'fixtures/test.{jpg,png,webp,gif,svg}',
-        '--out-dir=fixtures/tmp',
-        '--verbose',
-        '--ignore-errors',
-        '--max-concurrency=4'
+        "fixtures/test.{jpg,png,webp,gif,svg}",
+        "--out-dir=fixtures/tmp",
+        "--verbose",
+        "--ignore-errors",
+        "--max-concurrency=4"
     ]);
 
     t.regex(output.stderr, /Minifying image ".*?fixtures\/test\.jpg"/);
@@ -316,9 +321,9 @@ test('optimize images use `verbose`, `ignore-errors`, `max-concurrency` argument
     );
 });
 
-test('support `plugins` argument', async t => {
-    const buf = await fsP.readFile('fixtures/test.png');
-    const data = await execa.stdout(cliPath, ['--plugin=pngquant'], {
+test("support `plugins` argument", async t => {
+    const buf = await fsP.readFile("fixtures/test.png");
+    const data = await execa.stdout(cliPath, ["--plugin=pngquant"], {
         input: buf
     });
     const compareData = await execa.stdout(cliPath, {
@@ -328,10 +333,10 @@ test('support `plugins` argument', async t => {
     t.true(data.length < compareData.length);
 });
 
-test('throw error on missing `plugins`', async t => {
-    const buf = await fsP.readFile('fixtures/test.png');
+test("throw error on missing `plugins`", async t => {
+    const buf = await fsP.readFile("fixtures/test.png");
     const output = await t.throws(
-        execa(cliPath, ['--plugin=unicorn'], {
+        execa(cliPath, ["--plugin=unicorn"], {
             input: buf
         })
     );
@@ -339,15 +344,15 @@ test('throw error on missing `plugins`', async t => {
     t.regex(output.stderr, /Unknown plugin: unicorn/);
 });
 
-test('throw error when trying to write multiple files to `stdout`', async t => {
-    const output = await t.throws(execa(cliPath, ['fixtures/test.{jpg,png}']));
+test("throw error when trying to write multiple files to `stdout`", async t => {
+    const output = await t.throws(execa(cliPath, ["fixtures/test.{jpg,png}"]));
 
     t.is(
         output.stderr.trim(),
-        'Cannot write multiple files to stdout, specify a `--out-dir`'
+        "Cannot write multiple files to stdout, specify a `--out-dir`"
     );
 });
 
 test.after.always(async () => {
-    await fsP.remove('fixtures/tmp');
+    await fsP.remove("fixtures/tmp");
 });
