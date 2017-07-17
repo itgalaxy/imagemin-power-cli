@@ -1,6 +1,6 @@
 {
     "name": "imagemin-power-cli",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Optimize (compress) images with power using imagemin",
     "keywords": [
         "cli",
@@ -94,9 +94,9 @@
         "lint:remark": "remark . -i .gitignore -f -q",
         "lint": "npm-run-all -l -p lint:**",
         "prettier": "eslint . --fix --ignore-path .gitignore",
-        "ava": "nyc ava --verbose '**/__tests__/*.js'",
         "pretest": "npm run lint",
-        "test": "npm run ava",
+        "test-only": "nyc ava --verbose '**/__tests__/*.js'",
+        "test": "npm run test-only",
         "coveralls": "nyc report --reporter=text-lcov | coveralls",
         "release": "npmpub"
     },
