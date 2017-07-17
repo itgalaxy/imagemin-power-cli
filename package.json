@@ -1,6 +1,6 @@
 {
     "name": "imagemin-power-cli",
-    "version": "2.0.1",
+    "version": "3.0.0",
     "description": "Optimize (compress) images with power using imagemin",
     "keywords": [
         "cli",

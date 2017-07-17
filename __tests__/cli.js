@@ -162,7 +162,7 @@ test("optimize a PNG use glob pattern and `recursive` argument", async t => {
 test("optimize a PNG use glob pattern, `cwd` and `recursive` argument", async t => {
     await execa(cliPath, [
         "image/folder/test.png",
-        "--out-dir=../tmp",
+        "--out-dir=fixtures/tmp",
         "--plugin=pngquant",
         "--cwd=fixtures/deep",
         "--recursive"

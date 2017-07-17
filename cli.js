@@ -34,10 +34,10 @@ const cli = meow(
     Options:
 
         -c, --config           Configuration for plugins, need export \`plugins\`.
-        -d, --cwd              Current working directory.
+        -d, --cwd              The current working directory in which to search. Defaults to process.cwd().
         -m, --max-concurrency  Sets the maximum number of instances of Imagemin that can run at once.
         -p, --plugin           Override the default plugins.
-        -o, --out-dir          Output directory (respect \`cwd\` argument).
+        -o, --out-dir          Output directory.
         -r, --recursive        Run the command recursively.
         -i, --ignore-errors    Not stop on errors (it works with only with <path|glob>).
         -s  --silent           Reported only errors.
@@ -89,11 +89,13 @@ const handleFile = (filepath, opts) =>
                 }
 
                 const outDir = !path.isAbsolute(opts.outDir)
-                    ? path.join(opts.cwd, opts.outDir)
+                    ? path.join(process.cwd(), opts.outDir)
                     : path.normalize(opts.outDir);
 
-                const dest = path.resolve(
-                    path.join(outDir, parentDirectory, path.basename(filepath))
+                const dest = path.join(
+                    outDir,
+                    parentDirectory,
+                    path.basename(filepath)
                 );
 
                 const ret = {
@@ -314,12 +316,12 @@ const run = (input, options) => {
 
 const optionsBase = {};
 
-if (cli.flags.config) {
-    optionsBase.config = cli.flags.config;
-}
-
 if (cli.flags.cwd) {
     optionsBase.cwd = cli.flags.cwd;
+}
+
+if (cli.flags.config) {
+    optionsBase.config = cli.flags.config;
 }
 
 if (cli.flags.maxConcurrency) {
