@@ -37,7 +37,7 @@
     "dependencies": {
         "arrify": "^1.0.1",
         "async-throttle": "^1.0.0",
-        "file-type": "^5.2.0",
+        "file-type": "^6.1.0",
         "fs-extra": "^4.0.0",
         "get-stdin": "^5.0.1",
         "globby": "^6.0.0",
