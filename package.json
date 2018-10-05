@@ -62,7 +62,7 @@
         "eslint-plugin-import": "^2.6.0",
         "eslint-plugin-itgalaxy": "^50.0.0",
         "eslint-plugin-jest": "^21.0.0",
-        "eslint-plugin-jsx-a11y": "^6.0.0",
+        "eslint-plugin-jsx-a11y": "^6.1.2",
         "eslint-plugin-lodash": "^2.4.3",
         "eslint-plugin-node": "^5.1.0",
         "eslint-plugin-prettier": "^2.1.2",
