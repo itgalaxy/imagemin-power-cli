@@ -76,7 +76,7 @@
         "npm-run-all": "^4.0.0",
         "npmpub": "^3.1.0",
         "nyc": "^11.0.1",
-        "pify": "^3.0.0",
+        "pify": "^4.0.1",
         "prettier": "^1.5.2",
         "remark-cli": "^4.0.0",
         "remark-preset-lint-itgalaxy": "^7.0.1",
