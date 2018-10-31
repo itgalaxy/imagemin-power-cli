@@ -83,7 +83,7 @@
         "rimraf": "^2.5.2"
     },
     "optionalDependencies": {
-        "imagemin-gifsicle": "^5.0.0",
+        "imagemin-gifsicle": "^6.0.0",
         "imagemin-jpegtran": "^5.0.0",
         "imagemin-optipng": "^5.0.0",
         "imagemin-svgo": "^6.0.0"
